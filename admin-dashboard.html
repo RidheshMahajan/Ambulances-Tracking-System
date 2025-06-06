@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Ambulance Tracking System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <div class="user-info">
+                <span id="adminName">Admin</span>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="ambulance-management">
+                <h2>Ambulance Management</h2>
+                
+                <!-- Add New Ambulance Form -->
+                <div class="card">
+                    <h3>Add New Ambulance</h3>
+                    <form id="addAmbulanceForm" onsubmit="return addNewAmbulance(event)">
+                        <div class="form-group">
+                            <label for="ambulanceId">Ambulance ID</label>
+                            <input type="text" id="ambulanceId" required placeholder="Enter ambulance ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="driverName">Driver Name</label>
+                            <input type="text" id="driverName" required placeholder="Enter driver name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" required placeholder="Enter phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="ambulanceType">Ambulance Type</label>
+                            <select id="ambulanceType" required>
+                                <option value="basic">Basic Life Support</option>
+                                <option value="advanced">Advanced Life Support</option>
+                                <option value="mobile">Mobile ICU</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="currentLocation">Current Location</label>
+                            <div class="location-input-group">
+                                <input type="text" id="currentLocation" required placeholder="Enter location to get coordinates" oninput="getCoordinates(this.value)">
+                                <button type="button" onclick="getCoordinates(document.getElementById('currentLocation').value)" class="get-coordinates-btn">
+                                    <i class="fas fa-map-marker-alt"></i> Get Coordinates
+                                </button>
+                                <button type="button" onclick="getCurrentLocation()" class="current-location-btn">
+                                    <i class="fas fa-location-arrow"></i> Current Location
+                                </button>
+                            </div>
+                            <div class="map-container">
+                                <div id="map"></div>
+                                <div class="map-instructions">
+                                    Click on the map to select a location
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="latitude">Latitude</label>
+                            <input type="number" id="latitude" step="any" required placeholder="Latitude will be auto-filled" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">Longitude</label>
+                            <input type="number" id="longitude" step="any" required placeholder="Longitude will be auto-filled" readonly>
+                        </div>
+                        <button type="submit" class="add-btn">Add Ambulance</button>
+                    </form>
+                </div>
+
+                <!-- Ambulance List -->
+                <div class="card">
+                    <h3>Available Ambulances</h3>
+                    <div class="ambulance-list" id="ambulanceList">
+                        <!-- Ambulance items will be added here dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="statusUpdateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Ambulance Status</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="updateLocation">Current Location</label>
+                    <div class="location-input-group">
+                        <input type="text" id="updateLocation" required placeholder="Enter location to get coordinates" oninput="getUpdateCoordinates(this.value)">
+                        <button type="button" onclick="getUpdateCoordinates(document.getElementById('updateLocation').value)" class="get-coordinates-btn">
+                            <i class="fas fa-map-marker-alt"></i> Get Coordinates
+                        </button>
+                        <button type="button" onclick="getUpdateCurrentLocation()" class="current-location-btn">
+                            <i class="fas fa-location-arrow"></i> Current Location
+                        </button>
+                        <button type="button" onclick="updateLocationFromInput()" class="update-location-btn">
+                            <i class="fas fa-sync-alt"></i> Update Location
+                        </button>
+                    </div>
+                    <div class="map-container">
+                        <div id="updateMap"></div>
+                        <div class="map-instructions">
+                            Click on the map to select a location
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateLatitude">Latitude</label>
+                        <input type="number" id="updateLatitude" step="any" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateLongitude">Longitude</label>
+                        <input type="number" id="updateLongitude" step="any" required readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="confirmStatusUpdate()" class="confirm-btn">Update Status</button>
+                    <button onclick="closeStatusModal()" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-dashboard.js"></script>
+</body>
+</html> 
